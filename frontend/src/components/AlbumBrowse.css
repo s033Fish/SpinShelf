@@ -1,0 +1,62 @@
+/* src/components/AlbumBrowse.css */
+.album-browse {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .album-browse h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .search-bar {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .album-browse ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .album {
+    display: flex;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .album-cover {
+    width: 100px;
+    height: 100px;
+    margin-right: 20px;
+  }
+  
+  .album-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .album-info h3 {
+    margin: 0;
+    font-size: 1.2em;
+  }
+  
+  .album-info p {
+    margin: 5px 0;
+    font-size: 0.9em;
+    color: #555;
+  }
+  
