@@ -27,12 +27,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 // src/index.ts
-require("reflect-metadata");
 const express_1 = __importDefault(require("express"));
-const express_graphql_1 = require("express-graphql");
-const graphql_1 = require("graphql");
-const admin = __importStar(require("firebase-admin"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const admin = __importStar(require("firebase-admin"));
+const path_1 = __importDefault(require("path"));
+const albumRoutes_1 = __importDefault(require("./routes/albumRoutes"));
 dotenv_1.default.config();
 // Initialize Firebase Admin SDK
 const serviceAccount = require('../firebaseServiceAccount.json');
@@ -40,58 +39,19 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: 'https://<your-project-id>.firebaseio.com',
 });
-const db = admin.firestore();
-// GraphQL Schema Definition
-const schema = (0, graphql_1.buildSchema)(`
-  type Vinyl {
-    id: String
-    title: String
-    artist: String
-    genre: String
-    releaseYear: Int
-    coverImage: String
-  }
-
-  type Query {
-    vinyls: [Vinyl]
-  }
-
-  type Mutation {
-    addVinyl(title: String!, artist: String!, genre: String!, releaseYear: Int!, coverImage: String!): Vinyl
-  }
-`);
-// GraphQL Resolvers
-const resolvers = {
-    Query: {
-        vinyls: async () => {
-            const snapshot = await db.collection('vinyls').get();
-            return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        },
-    },
-    Mutation: {
-        addVinyl: async (_, args) => {
-            const newVinyl = {
-                title: args.title,
-                artist: args.artist,
-                genre: args.genre,
-                releaseYear: args.releaseYear,
-                coverImage: args.coverImage,
-            };
-            const docRef = await db.collection('vinyls').add(newVinyl);
-            return { id: docRef.id, ...newVinyl };
-        },
-    },
-};
 // Create Express Application
 const app = (0, express_1.default)();
-// Apply GraphQL Middleware
-app.use('/graphql', (0, express_graphql_1.graphqlHTTP)({
-    schema,
-    rootValue: resolvers,
-    graphiql: true, // Enable GraphiQL Interface
-}));
+app.use(express_1.default.json());
+// Serve Static Files from Public Directory
+app.use(express_1.default.static(path_1.default.join(__dirname, '..', '..', 'public')));
+// API Routes
+app.use('/api', albumRoutes_1.default);
+// Homepage Route
+app.get('/', (req, res) => {
+    res.sendFile(path_1.default.join(__dirname, '..', '..', 'public', 'index.html'));
+});
 // Start the Server
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}/graphql`);
+    console.log(`Server running at http://localhost:${PORT}`);
 });
